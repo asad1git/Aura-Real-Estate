@@ -26,7 +26,7 @@ export function BuildingCanvas() {
         <BuildingModel />
         
         {/* Cinematic Post-Processing Pipeline */}
-        <EffectComposer disableNormalPass multisampling={4}>
+        <EffectComposer enableNormalPass={false} multisampling={4}>
           <Noise opacity={0.035} />
           <Vignette eskil={false} offset={0.1} darkness={1.2} />
         </EffectComposer>
