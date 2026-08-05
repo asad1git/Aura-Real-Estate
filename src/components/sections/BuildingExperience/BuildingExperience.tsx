@@ -6,7 +6,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGsapContext } from "@/hooks/use-gsap";
 import { buildingStore } from "./store";
 import { BuildingCanvas } from "./BuildingCanvas";
-import { OverlayText } from "./OverlayText";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -42,11 +41,6 @@ export function BuildingExperience() {
       {/* 3D Canvas Context */}
       <div className="absolute inset-0 z-0">
         <BuildingCanvas />
-      </div>
-
-      {/* HTML DOM Overlay Context */}
-      <div ref={containerRef} className="absolute inset-0 z-10 pointer-events-none flex flex-col justify-center px-6 md:px-12 max-w-7xl mx-auto">
-        <OverlayText />
       </div>
     </section>
   );
