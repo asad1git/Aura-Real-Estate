@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGsapContext } from "@/hooks/use-gsap";
 import { PropertyCard, type Property } from "@/components/ui/PropertyCard";
 import { Navbar } from "@/components/layout/Navbar";
+import { cn } from "@/lib/utils";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);

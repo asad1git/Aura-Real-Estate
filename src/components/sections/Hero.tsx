@@ -76,13 +76,16 @@ export function Hero() {
     );
 
     // Bouncing animation for scroll indicator
-    gsap.to(scrollIndicatorRef.current?.querySelector(".dot"), {
-      y: 12,
-      duration: 1.5,
-      repeat: -1,
-      yoyo: true,
-      ease: "power1.inOut"
-    });
+    const dot = scrollIndicatorRef.current?.querySelector(".dot");
+    if (dot) {
+      gsap.to(dot, {
+        y: 12,
+        duration: 1.5,
+        repeat: -1,
+        yoyo: true,
+        ease: "power1.inOut"
+      });
+    }
 
     // 2. Parallax on Scroll
     gsap.to(bgRef.current, {
