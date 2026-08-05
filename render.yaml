@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: aura-real-estate
+    env: node
+    region: ohio
+    plan: starter
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 20.x # Explicitly setting Node version for Next.js 15

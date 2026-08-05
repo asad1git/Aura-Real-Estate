@@ -1,26 +1,73 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
+  
+  /* AWWWARDS LEVEL: Non-generic colors. 
+     Instead of pure black/white, we use a sophisticated "Ink" and "Alabaster" pairing */
+  --color-background: #FAF9F6; /* Alabaster / Warm Off-white */
+  --color-foreground: #0A0A0A; /* Deep Ink */
+  --color-primary: #0A0A0A;
+  --color-primary-foreground: #FAF9F6;
+  --color-secondary: #F0EFEA; /* Slightly darker alabaster for subtle contrast */
+  --color-secondary-foreground: #0A0A0A;
+  --color-muted: #E5E4DF;
+  --color-muted-foreground: #737373;
+  --color-accent: #D4AF37; /* Very subtle luxury gold, used sparingly */
+  --color-accent-foreground: #0A0A0A;
+  --color-border: #E5E4DF;
+  
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 1rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@custom-variant dark (&:is(.dark *));
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@utility hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility glass-dark {
+  background: rgba(10, 10, 10, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@utility glass-light {
+  background: rgba(250, 249, 246, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(10, 10, 10, 0.05);
+}
+
+/* Global Typography Tweaks for Editorial Feel */
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans selection:bg-foreground selection:text-background;
+    letter-spacing: -0.01em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.03em;
+  }
+  
+  /* Ensure focus rings are elegantly styled for accessibility */
+  *:focus-visible {
+    outline: 1px solid var(--color-foreground);
+    outline-offset: 4px;
+  }
 }
