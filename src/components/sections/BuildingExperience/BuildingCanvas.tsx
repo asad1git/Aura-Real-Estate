@@ -27,8 +27,8 @@ export function BuildingCanvas() {
         
         {/* Cinematic Post-Processing Pipeline */}
         <EffectComposer disableNormalPass multisampling={4}>
-          <Noise opacity={0.035} /> {/* Subtle film grain */}
-          <Vignette eskil={false} offset={0.1} darkness={1.2} /> {/* Darkens the edges to focus on the center */}
+          <Noise opacity={0.035} />
+          <Vignette eskil={false} offset={0.1} darkness={1.2} />
         </EffectComposer>
       </Suspense>
     </Canvas>
