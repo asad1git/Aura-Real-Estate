@@ -4,7 +4,7 @@ export function EnvironmentSetup() {
   return (
     <>
       <color attach="background" args={["#050505"]} />
-      <fog attach="fog" args={["#050505", 15, 60]} />
+      <fog attach="fog" args={["#050505", 40, 120]} />
       
       <ambientLight intensity={0.6} />
       

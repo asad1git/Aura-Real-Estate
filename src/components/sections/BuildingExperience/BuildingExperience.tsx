@@ -21,19 +21,30 @@ export function BuildingExperience() {
     // Reset progress on mount just in case of hot reloads
     buildingStore.progress = 0;
 
-    // We animate the proxy object's progress from 0 to 1 over the scroll distance
+    // Single unified trigger that pins the section and drives the animation perfectly in sync.
+    // We use scrub: 0.5 to keep it smooth without causing a massive startup lag.
     gsap.to(buildingStore, {
       progress: 1,
       ease: "none",
       scrollTrigger: {
         trigger: sectionRef.current,
         start: "top top",
-        end: "+=400%", // 4x screen height for the scroll experience
+        end: "+=400%", 
         pin: true,
-        scrub: 1, // Smooth scrubbing
+        scrub: 0.5,
+        invalidateOnRefresh: true, // Forces recalculation on layout shifts
       },
     });
 
+    // CRITICAL FIX: Next.js lazy-loads images in the sections above (FeaturedProperties, About).
+    // This causes the DOM height to change AFTER GSAP has calculated the trigger start points.
+    // By forcing a refresh after the initial render, we guarantee the math is 100% accurate 
+    // and the animation starts exactly at 0.0 progress.
+    const stRefresh = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 800);
+
+    return () => clearTimeout(stRefresh);
   }, []);
 
   return (

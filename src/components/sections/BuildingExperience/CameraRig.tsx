@@ -9,6 +9,7 @@ export function CameraRig() {
   const lookAtTarget = new THREE.Vector3(0, 3, 0);
 
   useFrame((state) => {
+    // Unclamped progress perfectly syncs camera movement with the scroll pin
     const p = buildingStore.progress;
 
     // --- Cinematic Camera Spline Logic ---
