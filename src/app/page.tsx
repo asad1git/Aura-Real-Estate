@@ -4,7 +4,7 @@ import { Hero } from "@/components/sections/Hero";
 
 // Lazy load below-the-fold sections for maximum initial performance
 const About = dynamic(() => import("@/components/sections/About").then(mod => mod.About), { ssr: true });
-const Storytelling = dynamic(() => import("@/components/sections/Storytelling").then(mod => mod.Storytelling), { ssr: true });
+const BuildingExperience = dynamic(() => import("@/components/sections/BuildingExperience").then(mod => mod.BuildingExperience), { ssr: true });
 const FeaturedProperties = dynamic(() => import("@/components/sections/FeaturedProperties").then(mod => mod.FeaturedProperties), { ssr: true });
 const HorizontalShowcase = dynamic(() => import("@/components/sections/HorizontalShowcase").then(mod => mod.HorizontalShowcase), { ssr: true });
 const Neighborhoods = dynamic(() => import("@/components/sections/Neighborhoods").then(mod => mod.Neighborhoods), { ssr: true });
@@ -21,7 +21,7 @@ export default function Home() {
       <FeaturedProperties />
       
       <div id="architecture">
-        <Storytelling />
+        <BuildingExperience />
       </div>
       
       <Neighborhoods />
