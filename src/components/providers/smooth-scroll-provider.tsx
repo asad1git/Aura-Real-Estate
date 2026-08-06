@@ -42,8 +42,8 @@ export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
         lerp: 0.05,
         duration: 1.2,
         smoothWheel: true,
-        // Support for reduced motion preferences
-        syncTouch: true,
+        // Disable syncTouch on mobile devices to prevent excessive lag
+        syncTouch: false,
       }}
       autoRaf={false} // Disable auto-raf so GSAP ticker drives it for perfect sync
     >

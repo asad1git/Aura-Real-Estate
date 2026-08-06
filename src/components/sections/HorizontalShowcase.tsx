@@ -44,92 +44,137 @@ export function HorizontalShowcase() {
 
     const panels = panelsRef.current;
     
-    // Calculate total scroll distance based on the number of panels
-    // We want to translate the container left by (total width - viewport width)
-    const totalScroll = `${-(panels.length - 1) * 100}vw`;
+    // Use matchMedia to only run complex animations on desktop
+    const mm = gsap.matchMedia();
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        pin: true,
-        scrub: 1,
-        start: "top top",
-        end: `+=${panels.length * 100}%`, // Scroll distance relative to number of panels
-      }
-    });
+    mm.add("(min-width: 1024px)", () => {
+      const totalScroll = `${-(panels.length - 1) * 100}vw`;
 
-    // Horizontal scroll animation
-    tl.to(scrollContainerRef.current, {
-      x: totalScroll,
-      ease: "none",
-    });
-
-    // Animate inner elements of each panel as they come into view
-    panels.forEach((panel, i) => {
-      if (!panel || i === 0) return; // Skip first panel as it's already in view
-
-      const imageContainer = panel.querySelector(".showcase-image");
-      const textContent = panel.querySelector(".showcase-text");
-
-      // Parallax effect for the image inside the scrolling panel
-      gsap.fromTo(
-        imageContainer,
-        { scale: 1.2, xPercent: 20 },
-        {
-          scale: 1,
-          xPercent: 0,
-          ease: "none",
-          scrollTrigger: {
-            trigger: panel,
-            containerAnimation: tl,
-            start: "left right",
-            end: "left center",
-            scrub: true,
-          }
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          pin: true,
+          scrub: 1,
+          start: "top top",
+          end: `+=${panels.length * 100}%`,
         }
-      );
+      });
 
-      // Reveal text
-      gsap.fromTo(
-        textContent?.children || [],
-        { autoAlpha: 0, x: 50 },
-        {
-          autoAlpha: 1,
-          x: 0,
-          stagger: 0.1,
-          scrollTrigger: {
-            trigger: panel,
-            containerAnimation: tl,
-            start: "left center",
-            toggleActions: "play none none reverse",
+      tl.to(scrollContainerRef.current, {
+        x: totalScroll,
+        ease: "none",
+      });
+
+      panels.forEach((panel, i) => {
+        if (!panel || i === 0) return;
+
+        const imageContainer = panel.querySelector(".showcase-image");
+        const textContent = panel.querySelector(".showcase-text");
+
+        gsap.fromTo(
+          imageContainer,
+          { scale: 1.2, xPercent: 20 },
+          {
+            scale: 1,
+            xPercent: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: panel,
+              containerAnimation: tl,
+              start: "left right",
+              end: "left center",
+              scrub: true,
+            }
           }
-        }
-      );
+        );
+
+        gsap.fromTo(
+          textContent?.children || [],
+          { autoAlpha: 0, x: 50 },
+          {
+            autoAlpha: 1,
+            x: 0,
+            stagger: 0.1,
+            scrollTrigger: {
+              trigger: panel,
+              containerAnimation: tl,
+              start: "left center",
+              toggleActions: "play none none reverse",
+            }
+          }
+        );
+      });
+      
+      return () => {
+        // Cleanup when breakpoint changes
+        tl.kill();
+      };
+    });
+    
+    // Mobile animations (simple fade up)
+    mm.add("(max-width: 1023px)", () => {
+      panels.forEach((panel) => {
+        if (!panel) return;
+        
+        const imageContainer = panel.querySelector(".showcase-image");
+        const textContent = panel.querySelector(".showcase-text");
+        
+        gsap.fromTo(
+          imageContainer,
+          { autoAlpha: 0, y: 30 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: panel,
+              start: "top 80%",
+            }
+          }
+        );
+        
+        gsap.fromTo(
+          textContent?.children || [],
+          { autoAlpha: 0, y: 30 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            stagger: 0.1,
+            duration: 0.8,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: panel,
+              start: "top 80%",
+            }
+          }
+        );
+      });
     });
 
   }, []);
 
   return (
-    <section ref={sectionRef} className="h-screen w-full overflow-hidden bg-background">
+    <section ref={sectionRef} className="lg:h-screen w-full lg:overflow-hidden bg-background">
       <div 
         ref={scrollContainerRef} 
-        className="flex h-full w-[300vw]" // 3 panels = 300vw
+        className="flex flex-col lg:flex-row h-full w-full lg:w-[300vw]"
       >
         {SHOWCASE_ITEMS.map((item, index) => (
           <div 
             key={item.id} 
             ref={(el) => { panelsRef.current[index] = el; }}
-            className="w-screen h-full flex flex-col lg:flex-row items-center justify-center p-6 md:p-12 lg:p-24 gap-12"
+            className="w-full lg:w-screen min-h-screen lg:h-full flex flex-col lg:flex-row items-center justify-center p-6 md:p-12 lg:p-24 gap-8 lg:gap-12"
           >
             {/* Text Side */}
-            <div className="showcase-text w-full lg:w-1/3 flex flex-col z-10 lg:pl-12">
-              <span className="text-muted-foreground tracking-widest uppercase text-sm mb-4 block font-medium">
+            <div className="showcase-text w-full lg:w-1/3 flex flex-col z-10 lg:pl-12 order-2 lg:order-1 mt-8 lg:mt-0">
+              <span className="text-muted-foreground tracking-widest uppercase text-sm mb-2 lg:mb-4 block font-medium">
                 0{index + 1} / {item.location}
               </span>
-              <h2 className="text-5xl md:text-6xl lg:text-7xl font-serif text-foreground tracking-tight leading-[1.1] mb-6">
+              <h2 className="text-4xl md:text-5xl lg:text-7xl font-serif text-foreground tracking-tight leading-[1.1] mb-4 lg:mb-6">
                 {item.title}
               </h2>
-              <p className="text-lg text-muted-foreground font-light max-w-md mb-8">
+              <p className="text-base lg:text-lg text-muted-foreground font-light max-w-md mb-6 lg:mb-8">
                 {item.description}
               </p>
               <div>
@@ -140,7 +185,7 @@ export function HorizontalShowcase() {
             </div>
 
             {/* Image Side */}
-            <div className="w-full lg:w-2/3 h-[50vh] lg:h-[80vh] relative overflow-hidden rounded-sm">
+            <div className="w-full lg:w-2/3 h-[40vh] md:h-[50vh] lg:h-[80vh] relative overflow-hidden rounded-sm order-1 lg:order-2 mt-20 lg:mt-0">
               <div className="showcase-image w-full h-full relative">
                 <Image
                   src={item.image}
