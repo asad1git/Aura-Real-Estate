@@ -1,5 +1,5 @@
 import { useRef, useMemo, useEffect } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { buildingStore } from "./store";
 
@@ -10,6 +10,13 @@ const linearStep = (min: number, max: number, value: number) => {
 };
 
 export function BuildingModel() {
+  const { viewport } = useThree();
+  
+  // Mobile Responsiveness: Scale the entire model down if the viewport is narrow
+  const isMobile = viewport.width < 25;
+  const globalScale = isMobile ? 0.25 : 0.45;
+  const globalY = isMobile ? 0 : -0.5;
+
   const foundationRef = useRef<THREE.Group>(null);
   const coreRef = useRef<THREE.Group>(null);
   const groundGlassRef = useRef<THREE.Group>(null);
@@ -160,7 +167,7 @@ export function BuildingModel() {
   });
 
   return (
-    <group position={[0, -0.5, 0]} scale={0.45}>
+    <group position={[0, globalY, 0]} scale={globalScale}>
       {/* 1. Foundation & Plinth */}
       <group ref={foundationRef}>
         <mesh position={[0, 0.5, -2]} receiveShadow castShadow material={materials.lightConcrete}>
